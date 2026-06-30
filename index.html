@@ -379,9 +379,12 @@ main{padding-top:calc(var(--header-h) + 3px)}
 
 /* === APPLY FORM === */
 .form-section{background:var(--color-primary);padding-block:clamp(var(--space-12),6vw,var(--space-20))}
-.form-wrap{background:var(--color-surface);border-radius:var(--radius-xl);padding:var(--space-8);box-shadow:var(--shadow-lg);max-width:640px;margin-inline:auto}
+.form-wrap{background:var(--color-surface);border-radius:var(--radius-xl);padding:var(--space-8);box-shadow:var(--shadow-lg);max-width:980px;margin-inline:auto}
 .form-title{font-size:var(--text-xl);color:var(--color-text);margin-bottom:var(--space-2)}
 .form-sub{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-6)}
+@media(min-width:900px){
+  .form-title,.form-sub,.form-note{white-space:nowrap}
+}
 .form-group{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:var(--space-4)}
 .form-group label{font-size:var(--text-sm);font-weight:700;color:var(--color-text)}
 .form-group input,.form-group select,.form-group textarea{width:100%;padding:var(--space-3) var(--space-4);border:1.5px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-bg);font-size:var(--text-base);color:var(--color-text);transition:border-color var(--transition)}
