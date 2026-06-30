@@ -1242,7 +1242,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
         <!-- 修正箇所: サブキャッチコピー -->
         <p class="hero-sub">お店でケアと運動とリフレッシュ<br>訪問はケガや病気の後遺症で歩くのが大変な方<br>はり・きゅう・あん摩マッサージ指圧の国家資格免許は安心の証<br>お子様からご高齢の方まで、地域と共に支える安心のケア。</p>
         <div class="hero-actions" id="visit-actions">
-          <a href="#apply" class="btn btn-primary">無料体験を申し込む</a>
+          <a href="https://docs.google.com/forms/d/1P2sGhHzhSzyuHeg6Hm-9lks-1A-Uqm4dzvxwAFddUiI/viewform" class="btn btn-primary" target="_blank" rel="noopener noreferrer">無料体験を申し込む</a>
           <a href="#faq" class="btn btn-outline">料金・よくある質問</a>
         </div>
         <div class="hero-actions" >
@@ -2424,40 +2424,13 @@ document.addEventListener("DOMContentLoaded", function(){
   </div>
 </section>
 
-<!-- ⑥ APPLY FORM -->
-<section class="form-section" id="apply" aria-label="無料体験お申し込みフォーム">
+<!-- ⑥ GOOGLE FORM -->
+<section class="form-section" id="apply" aria-label="無料体験・各種ご相談">
   <div class="container">
     <div class="form-wrap">
-      <!-- 修正箇所: フォーム見出し -->
       <h2 class="form-title">無料体験を申し込む・各種ご相談</h2>
-      <p class="form-sub">初回は無料体験（約30分）を実施しております。また各種ご相談もお気軽にご記入くださいませ。</p>
-      <form id="apply-form" novalidate>
-        <div class="form-group">
-          <label for="f-name">お名前 <span aria-hidden="true">*</span></label>
-          <!-- 修正箇所: プレースホルダー -->
-          <input type="text" id="f-name" name="name" placeholder="例：くろまめ　はなこ" required autocomplete="name">
-        </div>
-        <div class="form-group">
-          <label for="f-phone">電話番号 <span aria-hidden="true">*</span></label>
-          <input type="tel" id="f-phone" name="phone" placeholder="例：090-XX-XXXX" required autocomplete="tel">
-        </div>
-        <div class="form-group">
-          <label for="f-type">ご相談の種類</label>
-          <select id="f-type" name="type">
-            <option value="">選択してください</option>
-            <option value="elderly">高齢者施術について（ご本人・ご家族）</option>
-            <option value="child">お子様のご相談</option>
-            <option value="care">ケアマネージャー・施設関係者</option>
-            <option value="other">その他</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="f-msg">ご要望・ご質問（任意）</label>
-          <textarea id="f-msg" name="message" rows="4" placeholder="症状・ご不明な点、ご相談内容など何でもご記入ください"></textarea>
-        </div>
-        <p class="form-note">※ ご入力いただいた情報は個人情報保護法に則り運用し、施術のご案内や各種ご相談の手配のみに使用します。</p>
-        <button type="submit" class="btn btn-primary" style="width:100%">送信する</button>
-      </form>
+      <p class="form-sub">初回の無料体験（約30分）のお申し込み、各種ご相談はGoogleフォームから受け付けております。</p>
+      <a href="https://docs.google.com/forms/d/1P2sGhHzhSzyuHeg6Hm-9lks-1A-Uqm4dzvxwAFddUiI/viewform" class="btn btn-primary" style="width:100%" target="_blank" rel="noopener noreferrer">Googleフォームを開く</a>
     </div>
   </div>
 </section>
@@ -2760,7 +2733,7 @@ function closeStaffModal(){
           <li><a href="#" onclick="showServiceAndJump('visit','faq'); return false;">よくあるご質問・料金</a></li>
           <li><a href="#" onclick="showServiceAndJump('visit','map'); return false;">訪問エリア</a></li>
           <li><a href="#" onclick="showServiceAndJump('visit','caremanager'); return false;">ケアマネージャーや施設管理者の方へ</a></li>
-          <li><a href="#" onclick="showServiceAndJump('visit','apply'); return false;">お問い合わせ</a></li>
+          <li><a href="https://docs.google.com/forms/d/1P2sGhHzhSzyuHeg6Hm-9lks-1A-Uqm4dzvxwAFddUiI/viewform" target="_blank" rel="noopener noreferrer">お問い合わせ</a></li>
         </ul>
       </div>
 
@@ -2957,12 +2930,7 @@ document.getElementById('consult-modal').addEventListener('click', function(e){
   if(e.target === this) closeModal();
 });
 
-// === フォーム送信（モック） ===
-document.getElementById('apply-form').addEventListener('submit', function(e){
-  e.preventDefault();
-  alert('お申し込みありがとうございます！\n担当者より1〜2営業日以内にご連絡いたします。');
-  this.reset();
-});
+// === 購入相談フォーム送信（モック） ===
 document.getElementById('consult-form').addEventListener('submit', function(e){
   e.preventDefault();
   alert('ご相談を受け付けました。\n担当者より1〜2営業日以内にご連絡いたします。');
