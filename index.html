@@ -1007,14 +1007,22 @@ main{padding-top:calc(var(--header-h) + 3px)}
 }
 
 .clinic-logo-wrap{
-  text-align:center;
-  margin-bottom:32px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:0;
 }
 
 .clinic-logo{
-  max-width:300px;
-  width:100%;
+  width:min(100%,520px);
   height:auto;
+  display:block;
+}
+
+@media(max-width:767px){
+  .clinic-logo{
+    width:min(100%,380px);
+  }
 }
 
 /* === CLINIC ACCESS === */
@@ -1262,7 +1270,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
       <img
         src="images/logo/logo.jpg"
         alt="くろまめはりきゅう院ロゴ"
-        class="clinic-logo"　width="600" height="450" loading="eager">
+        class="clinic-logo" width="600" height="450" loading="eager">
     </div>
     </div>
   </div>
