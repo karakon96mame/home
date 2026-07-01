@@ -1146,6 +1146,25 @@ main{padding-top:calc(var(--header-h) + 3px)}
   }
 }
 
+/* PCではアクセス情報・周辺地図・駐車案内を横一列に配置 */
+@media (min-width: 1100px){
+  .clinic-access{
+    grid-template-columns:0.75fr 0.65fr 1.35fr;
+  }
+
+  .clinic-access-map{
+    max-width:420px;
+    justify-self:center;
+  }
+
+  .clinic-parking-guide{
+    grid-column:auto;
+    max-width:none;
+    margin:0;
+    align-self:start;
+  }
+}
+
 </style>
 </head>
 <body>
