@@ -1082,6 +1082,30 @@ main{padding-top:calc(var(--header-h) + 3px)}
   display:block;
 }
 
+.clinic-parking-guide{
+  grid-column:1 / -1;
+  width:100%;
+  max-width:937px;
+  justify-self:center;
+  margin:var(--space-2) 0 0;
+}
+
+.clinic-parking-guide figcaption{
+  margin-bottom:var(--space-3);
+  color:var(--color-text);
+  font-size:var(--text-base);
+  font-weight:700;
+  text-align:center;
+}
+
+.clinic-parking-guide img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+}
+
 #visit-actions{
   display:none;
 }
@@ -1416,6 +1440,17 @@ main{padding-top:calc(var(--header-h) + 3px)}
       loading="lazy"
     >
   </div>
+
+  <figure class="clinic-parking-guide">
+    <figcaption>駐車スペースのご案内</figcaption>
+    <img
+      src="images/clinic/parking.png"
+      alt="台町店の駐車スペース案内図"
+      width="937"
+      height="449"
+      loading="lazy"
+    >
+  </figure>
 
 </div>
 
