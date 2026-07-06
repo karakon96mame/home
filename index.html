@@ -2206,7 +2206,56 @@ main{padding-top:calc(var(--header-h) + 3px)}
 
   </div>
 </div>
+<script>
+const staffData = {
+  staff1: {
+    name: "院長　保坂 浩之",
+    img: "https://picsum.photos/seed/staff1/600/400",
+    detail: `
+      ・生年月：1985年4月<br>
+      ・：<br>
+      ・資格：はり師・きゅう師・あん摩マッサージ指圧師<br>
+      ・専門：
+    `
+  },
+    staff2: {
+    name: "小川 大空",
+    img: "https://picsum.photos/seed/staff1/600/400",
+    detail: `
+      ・生年月：1997年8月<br>
+      ・：<br>
+      ・資格：はり師・きゅう師・あん摩マッサージ指圧師<br>
+      ・専門：
+    `
+  },
+    staff3: {
+    name: "coming soon",
+    img: "https://picsum.photos/seed/staff1/600/400",
+    detail: `
+      ・生年月：<br>
+      ・：<br>
+      ・資格：はり師・きゅう師<br>
+      ・専門：
+    `
+  }
 
+};
+
+function openStaffModal(id){
+  const modal = document.getElementById("staff-modal");
+
+  modal.classList.add("show");
+
+  document.getElementById("modal-name").innerHTML = staffData[id].name;
+  document.getElementById("modal-detail").innerHTML = staffData[id].detail;
+  document.getElementById("modal-img").src = staffData[id].img;
+}
+
+function closeStaffModal(){
+  document.getElementById("staff-modal").classList.remove("show");
+}
+</script>
+  
 </section>
 </div>
 
@@ -2703,63 +2752,6 @@ document.addEventListener("DOMContentLoaded", function(){
       </div>
     </div>
   </div>
-</section>
-
-
-
-</div>
-
-
-<script>
-const staffData = {
-  staff1: {
-    name: "院長　保坂 浩之",
-    img: "https://picsum.photos/seed/staff1/600/400",
-    detail: `
-      ・生年月：1985年4月<br>
-      ・：<br>
-      ・資格：はり師・きゅう師・あん摩マッサージ指圧師<br>
-      ・専門：
-    `
-  },
-    staff2: {
-    name: "小川 大空",
-    img: "https://picsum.photos/seed/staff1/600/400",
-    detail: `
-      ・生年月：1997年8月<br>
-      ・：<br>
-      ・資格：はり師・きゅう師・あん摩マッサージ指圧師<br>
-      ・専門：
-    `
-  },
-    staff3: {
-    name: "coming soon",
-    img: "https://picsum.photos/seed/staff1/600/400",
-    detail: `
-      ・生年月：<br>
-      ・：<br>
-      ・資格：はり師・きゅう師<br>
-      ・専門：
-    `
-  }
-
-};
-
-function openStaffModal(id){
-  const modal = document.getElementById("staff-modal");
-
-  modal.classList.add("show");
-
-  document.getElementById("modal-name").innerHTML = staffData[id].name;
-  document.getElementById("modal-detail").innerHTML = staffData[id].detail;
-  document.getElementById("modal-img").src = staffData[id].img;
-}
-
-function closeStaffModal(){
-  document.getElementById("staff-modal").classList.remove("show");
-}
-</script>
-
 </section>
 
 </div>
