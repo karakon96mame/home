@@ -1337,6 +1337,95 @@ main{padding-top:calc(var(--header-h) + 3px)}
     font-size:11px;
   }
 }
+
+
+/* === CLINIC HOLIDAY PERIOD LEGEND === */
+.clinic-holiday-periods{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--space-2) var(--space-4);
+  margin:0 0 var(--space-4);
+  padding:var(--space-3) var(--space-4);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  background:var(--color-surface-offset);
+  font-size:var(--text-xs);
+  color:var(--color-text-muted);
+}
+
+.clinic-holiday-periods span{
+  white-space:nowrap;
+}
+
+.clinic-calendar-day{
+  flex-direction:column;
+  gap:4px;
+}
+
+.clinic-calendar-day .clinic-holiday-mark{
+  margin-top:auto;
+  align-self:flex-end;
+}
+
+.clinic-calendar-day.is-closed .clinic-holiday-mark{
+  position:static;
+  right:auto;
+  bottom:auto;
+}
+
+
+/* === MOBILE HOLIDAY CALENDAR TUNING === */
+@media(max-width:480px){
+  .clinic-calendar-day{
+    min-height:58px;
+    padding:5px 4px;
+    gap:3px;
+    font-size:12px;
+    line-height:1.2;
+  }
+
+  .clinic-calendar-day > span:first-child{
+    line-height:1;
+  }
+
+  .clinic-calendar-day .clinic-holiday-mark{
+    align-self:center;
+    min-width:0;
+    width:auto;
+    max-width:100%;
+    height:auto;
+    min-height:18px;
+    padding:2px 4px;
+    font-size:10px;
+    line-height:1.15;
+    white-space:nowrap;
+  }
+
+  .clinic-calendar-day.is-today::after{
+    inset:3px;
+  }
+
+  .clinic-holiday-periods{
+    gap:6px 10px;
+    padding:10px;
+  }
+
+  .clinic-holiday-periods span{
+    white-space:normal;
+  }
+}
+
+@media(max-width:360px){
+  .clinic-calendar-day{
+    min-height:62px;
+    padding-inline:3px;
+  }
+
+  .clinic-calendar-day .clinic-holiday-mark{
+    font-size:9px;
+    padding-inline:3px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1598,15 +1687,15 @@ main{padding-top:calc(var(--header-h) + 3px)}
     <li class="info-item">
       <span class="info-label">営業時間</span>
       <span class="info-value">
-        10:00〜12:00<br>
-        13:30〜16:00<br>
-        17:00〜20:30
+        ⓵10:00〜12:00<br>
+        ⓶13:30〜16:00<br>
+        ⓷17:00〜20:30
       </span>
    </li>
 
     <li class="info-item">
      <span class="info-label">定休日</span>
-     <span class="info-value">木曜日</span>
+     <span class="info-value">木曜日・不定休</span>
     </li>
 
     <li class="info-item">
@@ -1662,6 +1751,11 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <span class="clinic-holiday-mark">休診</span>
           <span>休診日</span>
         </div>
+      </div>
+      <div class="clinic-holiday-periods" aria-label="休診時間帯の説明">
+        <span>⓵: 10:00～12:00</span>
+        <span>⓶: 13:30～16:00</span>
+        <span>⓷: 17:00～20:30</span>
       </div>
       <div class="clinic-holiday-calendars" id="clinic-holiday-calendars" aria-live="polite"></div>
       <p class="clinic-holiday-status" id="clinic-holiday-status">カレンダーを読み込んでいます。</p>
@@ -3394,8 +3488,9 @@ function showServiceAndJump(service, targetId){
 
 
 // === 休診日カレンダー（Googleカレンダー + GAS連携） ===
+
+// === 休診日カレンダー（Googleカレンダー + GAS連携） ===
 (function(){
-  // GASをウェブアプリとしてデプロイしたURLに差し替えてください。
   var HOLIDAY_CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbz40iUagn43m_U8ftupBjwKilBhJ71V4O1gOlpKuGI4nl-oN7d73IheK0UL9o__BrGs/exec';
   var MONTH_COUNT = 2;
   var WEEKDAYS = ['日','月','火','水','木','金','土'];
@@ -3423,7 +3518,26 @@ function showServiceAndJump(service, targetId){
     return new Date(now.getFullYear(), now.getMonth() + offset, 1);
   }
 
-  function buildMonth(date, closedDateSet){
+  function normalizeClosedEntries(data){
+    var map = {};
+
+    if(data && Array.isArray(data.closedEntries)){
+      data.closedEntries.forEach(function(entry){
+        if(!entry || !entry.date) return;
+        map[entry.date] = entry.label || '休診';
+      });
+    }
+
+    if(data && Array.isArray(data.closedDates)){
+      data.closedDates.forEach(function(dateKey){
+        if(!map[dateKey]) map[dateKey] = '休診';
+      });
+    }
+
+    return map;
+  }
+
+  function buildMonth(date, closedDateMap){
     var year = date.getFullYear();
     var month = date.getMonth();
     var first = new Date(year, month, 1);
@@ -3440,19 +3554,20 @@ function showServiceAndJump(service, targetId){
     for(var i = 0; i < 42; i++){
       var current = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
       var key = toDateKey(current);
+      var labelText = closedDateMap[key];
       var classes = ['clinic-calendar-day'];
-      var label = (current.getMonth() + 1) + '月' + current.getDate() + '日';
+      var ariaLabel = (current.getMonth() + 1) + '月' + current.getDate() + '日';
 
       if(current.getMonth() !== month) classes.push('is-muted');
       if(key === todayKey) classes.push('is-today');
-      if(closedDateSet.has(key)) {
+      if(labelText) {
         classes.push('is-closed');
-        label += ' 休診';
+        ariaLabel += ' ' + labelText;
       }
 
-      html += '<div class="' + classes.join(' ') + '" aria-label="' + escapeHtml(label) + '">';
+      html += '<div class="' + classes.join(' ') + '" aria-label="' + escapeHtml(ariaLabel) + '">';
       html += '<span>' + current.getDate() + '</span>';
-      if(closedDateSet.has(key)) html += '<span class="clinic-holiday-mark">休診</span>';
+      if(labelText) html += '<span class="clinic-holiday-mark">' + escapeHtml(labelText) + '</span>';
       html += '</div>';
     }
 
@@ -3460,19 +3575,19 @@ function showServiceAndJump(service, targetId){
     return html;
   }
 
-  function render(closedDates, updatedAt){
-    var closedDateSet = new Set(Array.isArray(closedDates) ? closedDates : []);
+  function render(data){
+    var closedDateMap = normalizeClosedEntries(data || {});
     var html = '';
 
     for(var i = 0; i < MONTH_COUNT; i++){
-      html += buildMonth(monthDate(i), closedDateSet);
+      html += buildMonth(monthDate(i), closedDateMap);
     }
 
     calendarsEl.innerHTML = html;
 
     if(statusEl){
-      if(updatedAt){
-        statusEl.textContent = '最終更新: ' + new Date(updatedAt).toLocaleString('ja-JP');
+      if(data && data.updatedAt){
+        statusEl.textContent = '最終更新: ' + new Date(data.updatedAt).toLocaleString('ja-JP');
       }else{
         statusEl.textContent = '読み込み中';
       }
@@ -3481,7 +3596,7 @@ function showServiceAndJump(service, targetId){
 
   function loadWithJsonp(){
     if(!HOLIDAY_CALENDAR_API_URL || HOLIDAY_CALENDAR_API_URL.indexOf('PASTE_GAS_WEB_APP_URL_HERE') !== -1){
-      render([], null);
+      render({});
       return;
     }
 
@@ -3492,13 +3607,13 @@ function showServiceAndJump(service, targetId){
 
     window[callbackName] = function(data){
       clearTimeout(timeoutId);
-      render(data && data.closedDates, data && data.updatedAt);
+      render(data || {});
       delete window[callbackName];
       script.remove();
     };
 
     timeoutId = setTimeout(function(){
-      render([], null);
+      render({});
       if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。';
       delete window[callbackName];
       script.remove();
@@ -3507,7 +3622,7 @@ function showServiceAndJump(service, targetId){
     script.src = HOLIDAY_CALENDAR_API_URL + separator + 'callback=' + encodeURIComponent(callbackName);
     script.onerror = function(){
       clearTimeout(timeoutId);
-      render([], null);
+      render({});
       if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。';
       delete window[callbackName];
       script.remove();
@@ -3515,9 +3630,10 @@ function showServiceAndJump(service, targetId){
     document.head.appendChild(script);
   }
 
-  render([], null);
+  render({});
   loadWithJsonp();
 })();
+
 
 </script>
 </body>
