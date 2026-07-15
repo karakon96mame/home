@@ -1166,6 +1166,177 @@ main{padding-top:calc(var(--header-h) + 3px)}
   }
 }
 
+
+
+/* === CLINIC HOLIDAY CALENDAR === */
+.clinic-holiday-section{
+  margin-top:var(--space-8);
+}
+
+.clinic-holiday-panel{
+  background:var(--color-surface);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-sm);
+  padding:clamp(var(--space-4),3vw,var(--space-6));
+}
+
+.clinic-holiday-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:var(--space-4);
+  margin-bottom:var(--space-5);
+}
+
+.clinic-holiday-title{
+  font-size:var(--text-lg);
+  margin-bottom:var(--space-1);
+  color:var(--color-text);
+}
+
+.clinic-holiday-note,
+.clinic-holiday-status{
+  font-size:var(--text-sm);
+  color:var(--color-text-muted);
+}
+
+.clinic-holiday-status{
+  margin-top:var(--space-3);
+}
+
+.clinic-holiday-legend{
+  display:flex;
+  align-items:center;
+  gap:var(--space-2);
+  font-size:var(--text-sm);
+  color:var(--color-text-muted);
+  white-space:nowrap;
+}
+
+.clinic-holiday-mark{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:2.8em;
+  height:1.8em;
+  padding:0 .65em;
+  border-radius:var(--radius-full);
+  background:var(--color-accent-light);
+  color:var(--color-accent);
+  font-size:var(--text-xs);
+  font-weight:700;
+  line-height:1;
+}
+
+.clinic-holiday-calendars{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:var(--space-4);
+}
+
+@media(min-width:768px){
+  .clinic-holiday-calendars{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+.clinic-calendar{
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  background:var(--color-surface-2);
+}
+
+.clinic-calendar-month{
+  padding:var(--space-3) var(--space-4);
+  background:var(--color-primary);
+  color:var(--color-text-inverse);
+  font-weight:700;
+  text-align:center;
+}
+
+.clinic-calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+}
+
+.clinic-calendar-weekday,
+.clinic-calendar-day{
+  min-height:clamp(44px,7vw,64px);
+  border-right:1px solid var(--color-divider);
+  border-bottom:1px solid var(--color-divider);
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  padding:var(--space-2);
+  font-size:var(--text-sm);
+}
+
+.clinic-calendar-weekday{
+  min-height:auto;
+  justify-content:center;
+  padding:var(--space-2) var(--space-1);
+  font-size:var(--text-xs);
+  font-weight:700;
+  color:var(--color-text-muted);
+  background:var(--color-surface-offset);
+}
+
+.clinic-calendar-weekday:nth-child(7n),
+.clinic-calendar-day:nth-child(7n){
+  border-right:none;
+}
+
+.clinic-calendar-day{
+  position:relative;
+  color:var(--color-text);
+  background:var(--color-surface);
+}
+
+.clinic-calendar-day.is-muted{
+  background:var(--color-surface-2);
+  color:var(--color-text-faint);
+}
+
+.clinic-calendar-day.is-today::after{
+  content:"";
+  position:absolute;
+  inset:5px;
+  border:1.5px solid var(--color-primary);
+  border-radius:var(--radius-sm);
+  pointer-events:none;
+}
+
+.clinic-calendar-day.is-closed{
+  background:var(--color-accent-light);
+  color:var(--color-accent);
+  font-weight:700;
+}
+
+.clinic-calendar-day.is-closed .clinic-holiday-mark{
+  position:absolute;
+  right:6px;
+  bottom:6px;
+}
+
+@media(max-width:480px){
+  .clinic-holiday-head{
+    flex-direction:column;
+  }
+
+  .clinic-calendar-weekday,
+  .clinic-calendar-day{
+    padding:6px;
+  }
+
+  .clinic-calendar-day.is-closed .clinic-holiday-mark{
+    min-width:auto;
+    height:1.55em;
+    padding:0 .45em;
+    font-size:11px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1476,6 +1647,28 @@ main{padding-top:calc(var(--header-h) + 3px)}
 
 
 <!-- ⑦ SHOP -->
+
+
+<!-- 休診日カレンダー -->
+<section class="section clinic-holiday-section" id="clinic-holidays">
+  <div class="container">
+    <div class="clinic-holiday-panel">
+      <div class="clinic-holiday-head">
+        <div>
+          <p class="section-label">CALENDAR</p>
+          <h2 class="clinic-holiday-title">休診日カレンダー</h2>
+          <p class="clinic-holiday-note">Googleカレンダーで「休診」と登録された日を自動で反映します。</p>
+        </div>
+        <div class="clinic-holiday-legend" aria-label="凡例">
+          <span class="clinic-holiday-mark">休診</span>
+          <span>休診日</span>
+        </div>
+      </div>
+      <div class="clinic-holiday-calendars" id="clinic-holiday-calendars" aria-live="polite"></div>
+      <p class="clinic-holiday-status" id="clinic-holiday-status">カレンダーを読み込んでいます。</p>
+    </div>
+  </div>
+</section>
 <section class="section" id="shop">
   <div class="container">
     <p class="section-label">健康グッズショップ</p>
@@ -3198,6 +3391,134 @@ function showServiceAndJump(service, targetId){
   }, 300);
 }
 
+
+
+
+// === 休診日カレンダー（Googleカレンダー + GAS連携） ===
+(function(){
+  // GASをウェブアプリとしてデプロイしたURLに差し替えてください。
+  var HOLIDAY_CALENDAR_API_URL = 'PASTE_GAS_WEB_APP_URL_HERE';
+  var MONTH_COUNT = 2;
+  var WEEKDAYS = ['日','月','火','水','木','金','土'];
+  var calendarsEl = document.getElementById('clinic-holiday-calendars');
+  var statusEl = document.getElementById('clinic-holiday-status');
+
+  if(!calendarsEl) return;
+
+  function pad(num){
+    return String(num).padStart(2, '0');
+  }
+
+  function toDateKey(date){
+    return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+  }
+
+  function escapeHtml(value){
+    return String(value).replace(/[&<>"']/g, function(ch){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  function monthDate(offset){
+    var now = new Date();
+    return new Date(now.getFullYear(), now.getMonth() + offset, 1);
+  }
+
+  function buildMonth(date, closedDateSet){
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var first = new Date(year, month, 1);
+    var start = new Date(year, month, 1 - first.getDay());
+    var todayKey = toDateKey(new Date());
+    var html = '<article class="clinic-calendar">';
+
+    html += '<div class="clinic-calendar-month">' + year + '年' + (month + 1) + '月</div>';
+    html += '<div class="clinic-calendar-grid">';
+    WEEKDAYS.forEach(function(day){
+      html += '<div class="clinic-calendar-weekday">' + day + '</div>';
+    });
+
+    for(var i = 0; i < 42; i++){
+      var current = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      var key = toDateKey(current);
+      var classes = ['clinic-calendar-day'];
+      var label = (current.getMonth() + 1) + '月' + current.getDate() + '日';
+
+      if(current.getMonth() !== month) classes.push('is-muted');
+      if(key === todayKey) classes.push('is-today');
+      if(closedDateSet.has(key)) {
+        classes.push('is-closed');
+        label += ' 休診';
+      }
+
+      html += '<div class="' + classes.join(' ') + '" aria-label="' + escapeHtml(label) + '">';
+      html += '<span>' + current.getDate() + '</span>';
+      if(closedDateSet.has(key)) html += '<span class="clinic-holiday-mark">休診</span>';
+      html += '</div>';
+    }
+
+    html += '</div></article>';
+    return html;
+  }
+
+  function render(closedDates, updatedAt){
+    var closedDateSet = new Set(Array.isArray(closedDates) ? closedDates : []);
+    var html = '';
+
+    for(var i = 0; i < MONTH_COUNT; i++){
+      html += buildMonth(monthDate(i), closedDateSet);
+    }
+
+    calendarsEl.innerHTML = html;
+
+    if(statusEl){
+      if(updatedAt){
+        statusEl.textContent = '最終更新: ' + new Date(updatedAt).toLocaleString('ja-JP');
+      }else{
+        statusEl.textContent = 'Googleカレンダーの公開URLを設定すると、休診日が自動で反映されます。';
+      }
+    }
+  }
+
+  function loadWithJsonp(){
+    if(!HOLIDAY_CALENDAR_API_URL || HOLIDAY_CALENDAR_API_URL.indexOf('https://script.google.com/macros/s/AKfycbz40iUagn43m_U8ftupBjwKilBhJ71V4O1gOlpKuGI4nl-oN7d73IheK0UL9o__BrGs/exec') !== -1){
+      render([], null);
+      return;
+    }
+
+    var callbackName = 'clinicHolidayCalendarCallback_' + Date.now();
+    var script = document.createElement('script');
+    var separator = HOLIDAY_CALENDAR_API_URL.indexOf('?') === -1 ? '?' : '&';
+    var timeoutId;
+
+    window[callbackName] = function(data){
+      clearTimeout(timeoutId);
+      render(data && data.closedDates, data && data.updatedAt);
+      delete window[callbackName];
+      script.remove();
+    };
+
+    timeoutId = setTimeout(function(){
+      render([], null);
+      if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。';
+      delete window[callbackName];
+      script.remove();
+    }, 8000);
+
+    script.src = HOLIDAY_CALENDAR_API_URL + separator + 'callback=' + encodeURIComponent(callbackName);
+    script.onerror = function(){
+      clearTimeout(timeoutId);
+      render([], null);
+      if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。';
+      delete window[callbackName];
+      script.remove();
+    };
+    document.head.appendChild(script);
+  }
+
+  render([], null);
+  loadWithJsonp();
+})();
 
 </script>
 </body>
