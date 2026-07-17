@@ -1432,7 +1432,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
   --clinic-period-1:#b9dcff;
   --clinic-period-2:#ffe58a;
   --clinic-period-3:#c8e986;
-  --clinic-closed-bg:#e7e5e1;
+  --clinic-closed-bg:#efede9;
 }
 
 .clinic-opening-periods{
@@ -1466,7 +1466,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .clinic-opening-swatch.period-2{background:var(--clinic-period-2)}
 .clinic-opening-swatch.period-3{background:var(--clinic-period-3)}
 .clinic-opening-swatch.closed{
-  background:repeating-linear-gradient(135deg,var(--clinic-closed-bg) 0 5px,#d5d2cd 5px 9px);
+  background:var(--clinic-closed-bg);
 }
 
 .clinic-calendar-day.is-open{
@@ -1530,10 +1530,35 @@ main{padding-top:calc(var(--header-h) + 3px)}
   display:flex;
   align-items:center;
   width:100%;
-  min-height:23px;
+  min-height:22px;
   padding:2px 6px;
-  border-bottom:1px solid rgba(40,37,29,.12);
-  background:rgba(255,255,255,.9);
+  border-bottom:1px solid rgba(40,37,29,.08);
+  background:transparent;
+  color:var(--color-text-muted);
+  font-size:11px;
+  font-weight:600;
+}
+
+.clinic-calendar-day.is-today::after{
+  display:none;
+}
+
+.clinic-calendar-day.is-today > span:first-child{
+  background:var(--color-primary-highlight);
+  color:var(--color-primary);
+  font-weight:700;
+}
+
+.clinic-calendar-day.is-today > span:first-child::after{
+  content:"今日";
+  margin-left:auto;
+  padding:1px 4px;
+  border-radius:var(--radius-full);
+  background:var(--color-primary);
+  color:var(--color-text-inverse);
+  font-size:9px;
+  font-weight:700;
+  line-height:1.35;
 }
 
 .clinic-opening-marks{
@@ -1563,8 +1588,10 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .clinic-opening-mark.period-3{background:var(--clinic-period-3)}
 
 .clinic-opening-mark.is-closed-label{
-  background:repeating-linear-gradient(135deg,var(--clinic-closed-bg) 0 7px,#d5d2cd 7px 11px);
-  color:#5a5750;
+  background:var(--clinic-closed-bg);
+  color:#77736b;
+  font-weight:600;
+  text-shadow:none;
 }
 
 .clinic-calendar-message{
@@ -1589,6 +1616,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
 
   .clinic-opening-mark{
     font-size:12px;
+  }
+
+  .clinic-calendar-day.is-today > span:first-child::after{
+    content:"";
+    width:6px;
+    height:6px;
+    padding:0;
   }
 
   .clinic-calendar-day.is-open,
