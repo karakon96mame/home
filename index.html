@@ -1426,6 +1426,177 @@ main{padding-top:calc(var(--header-h) + 3px)}
     padding-inline:3px;
   }
 }
+
+/* === OPENING DAY CALENDAR === */
+:root{
+  --clinic-period-1:#b9dcff;
+  --clinic-period-2:#ffe58a;
+  --clinic-period-3:#c8e986;
+  --clinic-closed-bg:#e7e5e1;
+}
+
+.clinic-opening-periods{
+  display:flex;
+  flex-wrap:wrap;
+  gap:var(--space-2) var(--space-4);
+  margin:0 0 var(--space-4);
+  padding:var(--space-3) var(--space-4);
+  border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);
+  background:var(--color-surface-offset);
+  font-size:var(--text-xs);
+  color:var(--color-text-muted);
+}
+
+.clinic-opening-periods span{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.clinic-opening-swatch{
+  width:1.15em;
+  height:1.15em;
+  border:1px solid rgba(40,37,29,.2);
+  border-radius:3px;
+  flex:0 0 auto;
+}
+
+.clinic-opening-swatch.period-1{background:var(--clinic-period-1)}
+.clinic-opening-swatch.period-2{background:var(--clinic-period-2)}
+.clinic-opening-swatch.period-3{background:var(--clinic-period-3)}
+.clinic-opening-swatch.closed{
+  background:repeating-linear-gradient(135deg,var(--clinic-closed-bg) 0 5px,#d5d2cd 5px 9px);
+}
+
+.clinic-calendar-day.is-open{
+  color:#28251d;
+  font-weight:700;
+}
+
+.clinic-calendar-day.open-1{
+  background:var(--clinic-period-1);
+}
+
+.clinic-calendar-day.open-2{
+  background:var(--clinic-period-2);
+}
+
+.clinic-calendar-day.open-3{
+  background:var(--clinic-period-3);
+}
+
+.clinic-calendar-day.open-1-2{
+  background:linear-gradient(to bottom,var(--clinic-period-1) 0 50%,var(--clinic-period-2) 50% 100%);
+}
+
+.clinic-calendar-day.open-1-3{
+  background:linear-gradient(to bottom,var(--clinic-period-1) 0 50%,var(--clinic-period-3) 50% 100%);
+}
+
+.clinic-calendar-day.open-2-3{
+  background:linear-gradient(to bottom,var(--clinic-period-2) 0 50%,var(--clinic-period-3) 50% 100%);
+}
+
+.clinic-calendar-day.open-1-2-3{
+  background:linear-gradient(to bottom,
+    var(--clinic-period-1) 0 33.333%,
+    var(--clinic-period-2) 33.333% 66.666%,
+    var(--clinic-period-3) 66.666% 100%);
+}
+
+.clinic-calendar-day.is-fully-closed{
+  background:repeating-linear-gradient(135deg,var(--clinic-closed-bg) 0 7px,#d5d2cd 7px 11px);
+  color:#5a5750;
+  font-weight:700;
+}
+
+.clinic-calendar-day.is-muted{
+  background:var(--color-surface-2);
+  color:var(--color-text-faint);
+  font-weight:400;
+}
+
+.clinic-calendar-day.is-open,
+.clinic-calendar-day.is-fully-closed{
+  padding:0;
+  gap:0;
+  background:var(--color-surface);
+}
+
+.clinic-calendar-day:not(.is-muted) > span:first-child{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-height:23px;
+  padding:2px 6px;
+  border-bottom:1px solid rgba(40,37,29,.12);
+  background:rgba(255,255,255,.9);
+}
+
+.clinic-opening-marks{
+  position:relative;
+  z-index:1;
+  flex:1;
+  width:100%;
+  min-height:0;
+  display:grid;
+  grid-template-rows:repeat(var(--opening-count),1fr);
+  pointer-events:none;
+}
+
+.clinic-opening-mark{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#28251d;
+  font-size:var(--text-sm);
+  font-weight:700;
+  line-height:1;
+  text-shadow:0 1px 0 rgba(255,255,255,.8);
+}
+
+.clinic-opening-mark.period-1{background:var(--clinic-period-1)}
+.clinic-opening-mark.period-2{background:var(--clinic-period-2)}
+.clinic-opening-mark.period-3{background:var(--clinic-period-3)}
+
+.clinic-opening-mark.is-closed-label{
+  background:repeating-linear-gradient(135deg,var(--clinic-closed-bg) 0 7px,#d5d2cd 7px 11px);
+  color:#5a5750;
+}
+
+.clinic-calendar-message{
+  grid-column:1/-1;
+  padding:var(--space-6);
+  border:1px dashed var(--color-border);
+  border-radius:var(--radius-lg);
+  text-align:center;
+  color:var(--color-text-muted);
+  background:var(--color-surface-2);
+}
+
+@media(max-width:480px){
+  .clinic-opening-periods{
+    gap:7px 10px;
+    padding:10px;
+  }
+
+  .clinic-opening-periods span{
+    width:100%;
+  }
+
+  .clinic-opening-mark{
+    font-size:12px;
+  }
+
+  .clinic-calendar-day.is-open,
+  .clinic-calendar-day.is-fully-closed{
+    padding:0;
+    gap:0;
+  }
+}
 </style>
 </head>
 <body>
@@ -1738,21 +1909,21 @@ main{padding-top:calc(var(--header-h) + 3px)}
 <!-- ⑦ SHOP -->
 
 
-<!-- 休診日カレンダー -->
+<!-- 開業日カレンダー -->
 <section class="section clinic-holiday-section" id="clinic-holidays">
   <div class="container">
     <div class="clinic-holiday-panel">
       <div class="clinic-holiday-head">
         <div>
           <p class="section-label">CALENDAR</p>
-          <h2 class="clinic-holiday-title">休診日カレンダー</h2>
+          <h2 class="clinic-holiday-title">開業日カレンダー</h2>
         </div>
       </div>
-      <div class="clinic-holiday-periods" aria-label="休診表示の説明">
-        <span>休診: 終日休診</span>
-        <span>⓵: 10:00～12:00</span>
-        <span>⓶: 13:30～16:00</span>
-        <span>⓷: 17:00～20:30</span>
+      <div class="clinic-opening-periods" aria-label="営業時間帯と色の説明">
+        <span><i class="clinic-opening-swatch period-1" aria-hidden="true"></i>① 10:00～12:00</span>
+        <span><i class="clinic-opening-swatch period-2" aria-hidden="true"></i>② 13:30～16:00</span>
+        <span><i class="clinic-opening-swatch period-3" aria-hidden="true"></i>③ 17:00～20:30</span>
+        <span><i class="clinic-opening-swatch closed" aria-hidden="true"></i>休業</span>
       </div>
       <div class="clinic-holiday-calendars" id="clinic-holiday-calendars" aria-live="polite"></div>
       <p class="clinic-holiday-status" id="clinic-holiday-status">カレンダーを読み込んでいます。</p>
@@ -3484,9 +3655,7 @@ function showServiceAndJump(service, targetId){
 
 
 
-// === 休診日カレンダー（Googleカレンダー + GAS連携） ===
-
-// === 休診日カレンダー（Googleカレンダー + GAS連携） ===
+// === 開業日カレンダー（Googleカレンダーの休診時間 + GAS連携） ===
 (function(){
   var HOLIDAY_CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbyixQbKqyesnAQWkulsHb00I-0U2tOXZ0tsETKgQQgvF3sZmbNuWA21qO_mCNrWN4ka/exec';
   var MONTH_COUNT = 2;
@@ -3534,6 +3703,47 @@ function showServiceAndJump(service, targetId){
     return map;
   }
 
+  function getOpeningPeriods(closedLabel){
+    var allPeriods = [1, 2, 3];
+
+    if(!closedLabel) return allPeriods;
+    if(closedLabel.indexOf('休診') !== -1 && !/[①②③⓵⓶⓷]/.test(closedLabel)) return [];
+
+    return allPeriods.filter(function(period){
+      var marks = {
+        1:/[①⓵]/,
+        2:/[②⓶]/,
+        3:/[③⓷]/
+      };
+      return !marks[period].test(closedLabel);
+    });
+  }
+
+  function getOpeningClass(periods){
+    if(!periods.length) return 'is-fully-closed';
+    return 'is-open open-' + periods.join('-');
+  }
+
+  function getOpeningLabel(periods){
+    if(!periods.length) return '休業';
+    return periods.map(function(period){
+      return ['','①','②','③'][period];
+    }).join('');
+  }
+
+  function getOpeningMarks(periods){
+    if(!periods.length){
+      return '<span class="clinic-opening-marks" style="--opening-count:1">' +
+        '<span class="clinic-opening-mark is-closed-label">休業</span></span>';
+    }
+
+      return '<span class="clinic-opening-marks" style="--opening-count:' + periods.length + '">' +
+      periods.map(function(period){
+        return '<span class="clinic-opening-mark period-' + period + '">' +
+          ['','①','②','③'][period] + '</span>';
+      }).join('') + '</span>';
+  }
+
   function buildMonth(date, closedDateMap){
     var year = date.getFullYear();
     var month = date.getMonth();
@@ -3551,20 +3761,27 @@ function showServiceAndJump(service, targetId){
     for(var i = 0; i < 42; i++){
       var current = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
       var key = toDateKey(current);
-      var labelText = closedDateMap[key];
       var classes = ['clinic-calendar-day'];
       var ariaLabel = (current.getMonth() + 1) + '月' + current.getDate() + '日';
+      var isCurrentMonth = current.getMonth() === month;
+      var openingPeriods = [];
+      var openingLabel = '';
 
-      if(current.getMonth() !== month) classes.push('is-muted');
-      if(key === todayKey) classes.push('is-today');
-      if(labelText) {
-        classes.push('is-closed');
-        ariaLabel += ' ' + labelText;
+      if(!isCurrentMonth) {
+        classes.push('is-muted');
+      }else{
+        openingPeriods = getOpeningPeriods(closedDateMap[key]);
+        openingLabel = getOpeningLabel(openingPeriods);
+        classes.push(getOpeningClass(openingPeriods));
+        ariaLabel += openingPeriods.length
+          ? ' 営業時間帯' + openingLabel
+          : ' 休業';
       }
+      if(key === todayKey) classes.push('is-today');
 
       html += '<div class="' + classes.join(' ') + '" aria-label="' + escapeHtml(ariaLabel) + '">';
       html += '<span>' + current.getDate() + '</span>';
-      if(labelText) html += '<span class="clinic-holiday-mark">' + escapeHtml(labelText) + '</span>';
+      if(isCurrentMonth) html += getOpeningMarks(openingPeriods);
       html += '</div>';
     }
 
@@ -3591,9 +3808,14 @@ function showServiceAndJump(service, targetId){
     }
   }
 
+  function renderError(message){
+    calendarsEl.innerHTML = '<p class="clinic-calendar-message">' + escapeHtml(message) + '</p>';
+    if(statusEl) statusEl.textContent = message;
+  }
+
   function loadWithJsonp(){
     if(!HOLIDAY_CALENDAR_API_URL || HOLIDAY_CALENDAR_API_URL.indexOf('PASTE_GAS_WEB_APP_URL_HERE') !== -1){
-      render({});
+      renderError('開業日カレンダーの接続先が設定されていません。');
       return;
     }
 
@@ -3610,8 +3832,7 @@ function showServiceAndJump(service, targetId){
     };
 
     timeoutId = setTimeout(function(){
-      render({});
-      if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。';
+      renderError('開業日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。');
       delete window[callbackName];
       script.remove();
     }, 8000);
@@ -3619,15 +3840,14 @@ function showServiceAndJump(service, targetId){
     script.src = HOLIDAY_CALENDAR_API_URL + separator + 'callback=' + encodeURIComponent(callbackName);
     script.onerror = function(){
       clearTimeout(timeoutId);
-      render({});
-      if(statusEl) statusEl.textContent = '休診日カレンダーを読み込めませんでした。';
+      renderError('開業日カレンダーを読み込めませんでした。');
       delete window[callbackName];
       script.remove();
     };
     document.head.appendChild(script);
   }
 
-  render({});
+  calendarsEl.innerHTML = '<p class="clinic-calendar-message">カレンダーを読み込んでいます。</p>';
   loadWithJsonp();
 })();
 
