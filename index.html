@@ -710,6 +710,12 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .modal-title{font-size:var(--text-lg);font-weight:700;color:var(--color-text)}
 .modal-close{width:32px;height:32px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted)}
 .modal-close:hover{background:var(--color-surface-offset)}
+.recommend-modal-product{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)}
+.recommend-modal-img{width:100%;max-height:240px;object-fit:contain;background:var(--color-surface-offset);border-radius:var(--radius-lg);margin-bottom:var(--space-4)}
+.recommend-modal-body{display:flex;flex-direction:column;gap:var(--space-3);font-size:var(--text-sm);color:var(--color-text-muted)}
+.recommend-modal-body p{margin:0;color:var(--color-text-muted)}
+.recommend-modal-body ul{padding-left:1.2em;margin:0}
+.recommend-modal-body li{margin-bottom:var(--space-1)}
 
 /* === FAQ === */
 .faq-list{display:flex;flex-direction:column;gap:var(--space-3)}
@@ -1631,7 +1637,64 @@ main{padding-top:calc(var(--header-h) + 3px)}
     gap:0;
   }
 }
-</style>
+    /* === HOLIDAY CALENDAR MONTH CONTROLS === */
+    .clinic-holiday-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 18px;
+    }
+
+    .clinic-holiday-toggle {
+      border: 1px solid rgba(15, 23, 42, 0.16);
+      background: #fff;
+      color: #334155;
+      min-height: 40px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .clinic-holiday-toggle:hover,
+    .clinic-holiday-toggle:focus-visible {
+      border-color: rgba(31, 111, 235, 0.45);
+      box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.12);
+      outline: none;
+    }
+
+    .clinic-holiday-toggle.is-active {
+      background: #1f6feb;
+      border-color: #1f6feb;
+      color: #fff;
+    }
+
+    .clinic-opening-mark.is-closed-label {
+      min-width: 0;
+      max-width: 100%;
+      padding: 2px 5px;
+      font-size: clamp(0.56rem, 2.35vw, 0.72rem);
+      line-height: 1.18;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
+
+    @media (max-width: 640px) {
+      .clinic-holiday-controls {
+        gap: 8px;
+        margin: 12px 0 14px;
+      }
+
+      .clinic-holiday-toggle {
+        flex: 1 1 145px;
+        padding-inline: 10px;
+        font-size: 0.84rem;
+      }
+    }</style>
 </head>
 <body>
 
@@ -1959,6 +2022,10 @@ main{padding-top:calc(var(--header-h) + 3px)}
         <span><i class="clinic-opening-swatch period-3" aria-hidden="true"></i>③ 17:00～20:30</span>
         <span><i class="clinic-opening-swatch closed" aria-hidden="true"></i>休業</span>
       </div>
+      <div class="clinic-holiday-controls" aria-label="表示する月を切り替え">
+        <button class="clinic-holiday-toggle is-active" type="button" id="clinic-holiday-view-current" data-month-offset="0">今月・来月</button>
+        <button class="clinic-holiday-toggle" type="button" id="clinic-holiday-view-next" data-month-offset="1">来月・再来月</button>
+      </div>
       <div class="clinic-holiday-calendars" id="clinic-holiday-calendars" aria-live="polite"></div>
       <p class="clinic-holiday-status" id="clinic-holiday-status">カレンダーを読み込んでいます。</p>
     </div>
@@ -1969,7 +2036,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
     <p class="section-label">健康グッズショップ</p>
     <!-- 修正箇所: ショップ見出し -->
     <h2 class="section-title">おすすめ健康グッズ</h2>
-    <p class="section-lead">当院所属の施術者が厳選した、6カテゴリのセルフケア用品などをご紹介します。購入相談・アフィリエイトなどでのご購入が可能です。</p>
+    <p class="section-lead">当院所属の施術者が厳選した、6カテゴリのセルフケア用品などをご紹介します。おすすめポイントを確認しながら、楽天市場などでご購入いただけます。</p>
      <details><summary></summary>
      <!-- カテゴリナビ（タップで該当セクションへジャンプ） -->
      <div class="shop-cats" role="navigation" aria-label="商品カテゴリ">
@@ -1997,9 +2064,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
              <div class="shop-card-body">
                <div class="shop-card-name">長生灸　ノンスモーク</div>
                <div class="shop-card-desc">自宅で手軽にお灸。伝統の温熱療法を日常に。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「長生灸　ノンスモーク」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
                <div class="shop-card-price">¥2,915</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('長生灸　ノンスモーク')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="https://hb.afl.rakuten.co.jp/ichiba/55d540d0.6e0c3f1f.55d540d1.c90506d0/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fmaiple-nagoya%2F1358-2%2F&link_type=hybrid_url&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJoeWJyaWRfdXJsIiwic2l6ZSI6IjI0MHgyNDAiLCJuYW0iOjEsIm5hbXAiOiJyaWdodCIsImNvbSI6MSwiY29tcCI6ImRvd24iLCJwcmljZSI6MSwiYm9yIjoxLCJjb2wiOjEsImJidG4iOjEsInByb2QiOjAsImFtcCI6ZmFsc2V9" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
@@ -2009,9 +2080,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
              <div class="shop-card-body">
                 <div class="shop-card-name">ツボ押し棒セット</div>
                 <div class="shop-card-desc">肩・首・足裏のツボを的確に刺激。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「ツボ押し棒セット」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
                 <div class="shop-card-price">¥1,200</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('ツボ押し棒セット')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
@@ -2021,45 +2096,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
              <div class="shop-card-body">
                <div class="shop-card-name">温熱パッド（電気不要）</div>
                <div class="shop-card-desc">腰・肩・膝に貼るだけの持続温熱。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「温熱パッド（電気不要）」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
                <div class="shop-card-price">¥880</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('温熱パッド（電気不要）')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
            </div>
            <div class="shop-card">
-             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="追加１" width="300" height="160" loading="lazy">
+             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
              <div class="shop-card-body">
-               <div class="shop-card-name">追加１</div>
-               <div class="shop-card-desc">コメント</div>
-               <div class="shop-card-price">¥880</div>
+               <div class="shop-card-name">Coming soon</div>
+               <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+               <div class="shop-card-price">Coming soon</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
            </div>
            <div class="shop-card">
-             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="追加２" width="300" height="160" loading="lazy">
+             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
              <div class="shop-card-body">
-               <div class="shop-card-name">追加２</div>
-               <div class="shop-card-desc">コメント</div>
-               <div class="shop-card-price">¥880</div>
+               <div class="shop-card-name">Coming soon</div>
+               <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+               <div class="shop-card-price">Coming soon</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
            </div>
            <div class="shop-card">
-             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="追加３" width="300" height="160" loading="lazy">
+             <img class="shop-card-img" src="https://picsum.photos/seed/heatpad/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
              <div class="shop-card-body">
-               <div class="shop-card-name">追加３</div>
-               <div class="shop-card-desc">コメント</div>
-               <div class="shop-card-price">¥880</div>
+               <div class="shop-card-name">Coming soon</div>
+               <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+               <div class="shop-card-price">Coming soon</div>
                <div class="shop-card-btns">
-                 <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+                 <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                  <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
                </div>
              </div>
@@ -2080,9 +2162,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
             <div class="shop-card-body">
               <div class="shop-card-name">安眠アロマセット</div>
               <div class="shop-card-desc">ラベンダー・カモミール配合でリラックス。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「安眠アロマセット」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
               <div class="shop-card-price">¥2,480</div>
               <div class="shop-card-btns">
-                <button class="btn-sm btn-sm-outline" onclick="openConsultModal('安眠アロマセット')">購入相談</button>
+                <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
                 <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
               </div>
           </div>
@@ -2092,9 +2178,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">ヒノキ香る安眠枕</div>
             <div class="shop-card-desc">国産ヒノキチップで頚椎をやさしくサポート。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「ヒノキ香る安眠枕」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥4,800</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('ヒノキ香る安眠枕')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2104,45 +2194,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">重力ブランケット</div>
             <div class="shop-card-desc">程よい重みが不安を和らげ深い眠りへ。感覚過敏のお子様にも。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「重力ブランケット」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥8,900</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('重力ブランケット')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="追加１" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加１</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥8,900</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥8,900</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="追加３" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/weightblanket/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加３</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥8,900</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2163,9 +2260,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">マルチビタミン&ミネラル</div>
             <div class="shop-card-desc">1粒で必要栄養素を総合的にカバー。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「マルチビタミン&ミネラル」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥3,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('マルチビタミン&ミネラル')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2175,9 +2276,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">グルコサミン＋コンドロイチン</div>
             <div class="shop-card-desc">膝・腰の軟骨をケア。高齢者の方に人気。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「グルコサミン＋コンドロイチン」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥3,980</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('グルコサミン＋コンドロイチン')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2187,45 +2292,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">鉄分・葉酸サプリ（女性向け）</div>
             <div class="shop-card-desc">貧血・疲れやすさを感じる女性に。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「鉄分・葉酸サプリ（女性向け）」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥2,600</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('鉄分・葉酸サプリ')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="追加１" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加１</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥2,600</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥2,600</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="追加３" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/ironsupple/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加３</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥2,600</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2246,9 +2358,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">ペット用温灸パッド</div>
             <div class="shop-card-desc">関節の痛みや老犬・老猫のケアに。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「ペット用温灸パッド」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,980</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('ペット用温灸パッド')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2258,9 +2374,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">ペット関節サプリ</div>
             <div class="shop-card-desc">グルコサミン配合。シニアペットの足腰を守る。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「ペット関節サプリ」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥3,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('ペット関節サプリ')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2270,45 +2390,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">肉球保護クリーム</div>
             <div class="shop-card-desc">乾燥・ひび割れ予防。天然成分で安心。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「肉球保護クリーム」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,500</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('肉球保護クリーム')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="追加１" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加１</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,500</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,500</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="追加３" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/nikukyucream/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加３</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,500</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2329,9 +2456,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">筋膜リリースガン</div>
             <div class="shop-card-desc">運動後の筋肉疲労を素早く解消。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「筋膜リリースガン」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥6,800</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('筋膜リリースガン')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2341,9 +2472,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">ヨガマット（6mm厚）</div>
             <div class="shop-card-desc">自宅ストレッチ・ヨガに。滑り止め加工。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「ヨガマット（6mm厚）」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥2,980</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('ヨガマット（6mm厚）')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2353,45 +2488,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">キネシオテーピング（5本セット）</div>
             <div class="shop-card-desc">関節・筋肉のサポートに。肌に優しい素材。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「キネシオテーピング（5本セット）」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,980</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('キネシオテーピング')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="追加１" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加１</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,980</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,980</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="追加３" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/taping/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加３</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,980</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2412,9 +2554,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">姿勢矯正サポーター</div>
             <div class="shop-card-desc">猫背・巻き肩を自然に矯正。在宅ワークに。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「姿勢矯正サポーター」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥3,400</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('姿勢矯正サポーター')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2424,9 +2570,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">上腕式デジタル血圧計</div>
             <div class="shop-card-desc">高齢者の方の日常的な健康管理に。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「上腕式デジタル血圧計」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥4,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('デジタル血圧計')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2436,45 +2586,52 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">天然青竹踏み</div>
             <div class="shop-card-desc">足裏刺激で血行促進。毎朝の習慣に。</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「天然青竹踏み」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('天然青竹踏み')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="追加1" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加１</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,200</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,200</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
         </div>
         <div class="shop-card">
-          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="追加２" width="300" height="160" loading="lazy">
+          <img class="shop-card-img" src="https://picsum.photos/seed/takemat/300/160" alt="Coming soon" width="300" height="160" loading="lazy">
           <div class="shop-card-body">
-            <div class="shop-card-name">追加２</div>
-            <div class="shop-card-desc">コメント</div>
-            <div class="shop-card-price">¥1,200</div>
+            <div class="shop-card-name">Coming soon</div>
+            <div class="shop-card-desc">掲載準備中です。</div>
+              <div class="shop-card-recommend" hidden><p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p></div>
+            <div class="shop-card-price">Coming soon</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('追加３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2495,9 +2652,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">すずらん味噌</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「すずらん味噌」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥4,800</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2507,9 +2668,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">きざみわさび</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「きざみわさび」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,280</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2519,9 +2684,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">食品３</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「食品３」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2531,9 +2700,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">食品４</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「食品４」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品４')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2543,9 +2716,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">食品５</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「食品５」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品５')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2555,9 +2732,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">食品６</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「食品６」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('食品６')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2578,9 +2759,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他１</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他１」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥3,400</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他１')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2590,9 +2775,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他２</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他２」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥4,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他２')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2602,9 +2791,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他３</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他３」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他３')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2614,9 +2807,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他４</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他４」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他４')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2626,9 +2823,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他５</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他５」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他５')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2638,9 +2839,13 @@ main{padding-top:calc(var(--header-h) + 3px)}
           <div class="shop-card-body">
             <div class="shop-card-name">その他６</div>
             <div class="shop-card-desc">コメント</div>
+              <div class="shop-card-recommend" hidden>
+                <p>ここに「その他６」のおすすめポイントを記入してください。</p>
+                <p>文章が長くなる場合は、このように&lt;p&gt;タグを増やして段落ごとに書くと、モーダル内でも読みやすく表示されます。</p>
+              </div>
             <div class="shop-card-price">¥1,200</div>
             <div class="shop-card-btns">
-              <button class="btn-sm btn-sm-outline" onclick="openConsultModal('その他６')">購入相談</button>
+              <button class="btn-sm btn-sm-outline" type="button" onclick="openRecommendModal(this)">おすすめポイント</button>
               <a href="#" class="btn-sm btn-sm-primary" target="_blank" rel="noopener noreferrer">購入する</a>
             </div>
           </div>
@@ -2761,8 +2966,7 @@ function closeStaffModal(){
 
 .section-text p:last-child{
   margin-bottom: 0;
-}
-</style>
+}</style>
 
 <section class="section" id="visit-introduction">
   <div class="container">
@@ -3199,7 +3403,7 @@ document.addEventListener("DOMContentLoaded", function(){
     <div class="evidence-box" style="margin-top:var(--space-8)">
       <h4>いつまでも自分らしくあるために…</h4>
       <!-- 修正箇所: エビデンス文 -->
-      <p>現在平均健康寿命は男性で72歳、女性75歳となっています。平均寿命と健康寿命の開きがある事はご存じかと思います。いわく「ピンピンコロリ」を実践するために、お身体の事はこちらがお引き受けできることがあろうかと思います。</p>
+      <p>現在日本人の平均寿命は男性81歳、女性87歳となっています。しかし、平均健康寿命は男性で72歳、女性は75歳となっており、平均寿命と健康寿命の開きがあります。いわく「ピンピンコロリ」を実践するために、お身体の事はこちらがお引き受けできることがあろうかと思います。</p>
     </div>
   </div>
 </section>
@@ -3309,31 +3513,18 @@ document.addEventListener("DOMContentLoaded", function(){
   </div>
 </footer>
 
-<!-- 購入相談モーダル -->
-<div class="modal-overlay" id="consult-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<!-- おすすめポイントモーダル -->
+<div class="modal-overlay" id="recommend-modal" role="dialog" aria-modal="true" aria-labelledby="recommend-modal-title">
   <div class="modal">
     <div class="modal-header">
-      <h2 class="modal-title" id="modal-title">購入相談フォーム</h2>
+      <h2 class="modal-title" id="recommend-modal-title">おすすめポイント</h2>
       <button class="modal-close" onclick="closeModal()" aria-label="モーダルを閉じる">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <p id="consult-product-name" style="font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-4)"></p>
-    <form id="consult-form">
-      <div class="form-group">
-        <label for="c-name">お名前</label>
-        <input type="text" id="c-name" name="name" placeholder="例：田中 花子" required>
-      </div>
-      <div class="form-group">
-        <label for="c-phone">お電話番号</label>
-        <input type="tel" id="c-phone" name="phone" placeholder="例：0495-XX-XXXX" required>
-      </div>
-      <div class="form-group">
-        <label for="c-msg">ご質問・ご要望</label>
-        <textarea id="c-msg" name="message" rows="3" placeholder="商品についての質問、数量など何でもどうぞ"></textarea>
-      </div>
-      <button type="submit" class="btn btn-primary" style="width:100%">送信する</button>
-    </form>
+    <p id="recommend-product-name" class="recommend-modal-product"></p>
+    <img id="recommend-modal-img" class="recommend-modal-img" src="" alt="" loading="lazy">
+    <div id="recommend-modal-body" class="recommend-modal-body"></div>
   </div>
 </div>
 
@@ -3470,28 +3661,40 @@ function toggleFaq(btn){
   }
 }
 
-// === 購入相談モーダル ===
-function openConsultModal(productName){
-  var modal = document.getElementById('consult-modal');
-  document.getElementById('consult-product-name').textContent = '商品：' + productName;
+// === おすすめポイントモーダル ===
+function openRecommendModal(button){
+  var card = button.closest('.shop-card');
+  var modal = document.getElementById('recommend-modal');
+  var productName = card ? card.querySelector('.shop-card-name') : null;
+  var recommend = card ? card.querySelector('.shop-card-recommend') : null;
+  var productImg = card ? card.querySelector('.shop-card-img') : null;
+  var modalImg = document.getElementById('recommend-modal-img');
+
+  document.getElementById('recommend-product-name').textContent = productName ? '商品：' + productName.textContent.trim() : '';
+  document.getElementById('recommend-modal-body').innerHTML = recommend
+    ? recommend.innerHTML
+    : '<p>この商品のおすすめポイントは現在準備中です。掲載までしばらくお待ちください。</p>';
+
+  if(productImg && productImg.getAttribute('src')){
+    modalImg.src = productImg.getAttribute('src');
+    modalImg.alt = productImg.getAttribute('alt') || (productName ? productName.textContent.trim() : '商品画像');
+    modalImg.style.display = 'block';
+  }else{
+    modalImg.removeAttribute('src');
+    modalImg.alt = '';
+    modalImg.style.display = 'none';
+  }
+
   modal.classList.add('open');
-  modal.querySelector('input').focus();
+  modal.querySelector('.modal-close').focus();
 }
 function closeModal(){
-  document.getElementById('consult-modal').classList.remove('open');
+  var recommendModal = document.getElementById('recommend-modal');
+  if(recommendModal) recommendModal.classList.remove('open');
 }
-document.getElementById('consult-modal').addEventListener('click', function(e){
+document.getElementById('recommend-modal').addEventListener('click', function(e){
   if(e.target === this) closeModal();
 });
-
-// === 購入相談フォーム送信（モック） ===
-document.getElementById('consult-form').addEventListener('submit', function(e){
-  e.preventDefault();
-  alert('ご相談を受け付けました。\n担当者より1〜2営業日以内にご連絡いたします。');
-  this.reset();
-  closeModal();
-});
-
 // === リンク検証 / 全アンカーの存在確認（コンソールに出力） ===
 document.querySelectorAll('a[href^="#"]').forEach(function(a){
   var id = a.getAttribute('href').slice(1);
@@ -3691,199 +3894,213 @@ function showServiceAndJump(service, targetId){
 
 // === 開業日カレンダー（Googleカレンダーの休診時間 + GAS連携） ===
 (function(){
-  var HOLIDAY_CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbyixQbKqyesnAQWkulsHb00I-0U2tOXZ0tsETKgQQgvF3sZmbNuWA21qO_mCNrWN4ka/exec';
-  var MONTH_COUNT = 2;
-  var WEEKDAYS = ['日','月','火','水','木','金','土'];
-  var calendarsEl = document.getElementById('clinic-holiday-calendars');
-  var statusEl = document.getElementById('clinic-holiday-status');
+      var HOLIDAY_CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbyixQbKqyesnAQWkulsHb00I-0U2tOXZ0tsETKgQQgvF3sZmbNuWA21qO_mCNrWN4ka/exec';
+      var MONTH_COUNT = 2;
+      var WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
+      var calendarsEl = document.getElementById('clinic-holiday-calendars');
+      var statusEl = document.getElementById('clinic-holiday-status');
+      var toggleButtons = Array.prototype.slice.call(document.querySelectorAll('.clinic-holiday-toggle[data-month-offset]'));
+      var currentMonthOffset = 0;
+      var latestHolidayData = null;
 
-  if(!calendarsEl) return;
+      if(!calendarsEl) return;
 
-  function pad(num){
-    return String(num).padStart(2, '0');
-  }
-
-  function toDateKey(date){
-    return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
-  }
-
-  function escapeHtml(value){
-    return String(value).replace(/[&<>"']/g, function(ch){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
-    });
-  }
-
-  function monthDate(offset){
-    var now = new Date();
-    return new Date(now.getFullYear(), now.getMonth() + offset, 1);
-  }
-
-  function normalizeClosedEntries(data){
-    var map = {};
-
-    if(data && Array.isArray(data.closedEntries)){
-      data.closedEntries.forEach(function(entry){
-        if(!entry || !entry.date) return;
-        map[entry.date] = entry.label || '休診';
-      });
-    }
-
-    if(data && Array.isArray(data.closedDates)){
-      data.closedDates.forEach(function(dateKey){
-        if(!map[dateKey]) map[dateKey] = '休診';
-      });
-    }
-
-    return map;
-  }
-
-  function getOpeningPeriods(closedLabel){
-    var allPeriods = [1, 2, 3];
-
-    if(!closedLabel) return allPeriods;
-    if(closedLabel.indexOf('休診') !== -1 && !/[①②③⓵⓶⓷]/.test(closedLabel)) return [];
-
-    return allPeriods.filter(function(period){
-      var marks = {
-        1:/[①⓵]/,
-        2:/[②⓶]/,
-        3:/[③⓷]/
-      };
-      return !marks[period].test(closedLabel);
-    });
-  }
-
-  function getOpeningClass(periods){
-    if(!periods.length) return 'is-fully-closed';
-    return 'is-open open-' + periods.join('-');
-  }
-
-  function getOpeningLabel(periods){
-    if(!periods.length) return '休業';
-    return periods.map(function(period){
-      return ['','①','②','③'][period];
-    }).join('');
-  }
-
-  function getOpeningMarks(periods){
-    if(!periods.length){
-      return '<span class="clinic-opening-marks" style="--opening-count:1">' +
-        '<span class="clinic-opening-mark is-closed-label">休業</span></span>';
-    }
-
-      return '<span class="clinic-opening-marks" style="--opening-count:' + periods.length + '">' +
-      periods.map(function(period){
-        return '<span class="clinic-opening-mark period-' + period + '">' +
-          ['','①','②','③'][period] + '</span>';
-      }).join('') + '</span>';
-  }
-
-  function buildMonth(date, closedDateMap){
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var first = new Date(year, month, 1);
-    var start = new Date(year, month, 1 - first.getDay());
-    var todayKey = toDateKey(new Date());
-    var html = '<article class="clinic-calendar">';
-
-    html += '<div class="clinic-calendar-month">' + year + '年' + (month + 1) + '月</div>';
-    html += '<div class="clinic-calendar-grid">';
-    WEEKDAYS.forEach(function(day){
-      html += '<div class="clinic-calendar-weekday">' + day + '</div>';
-    });
-
-    for(var i = 0; i < 42; i++){
-      var current = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
-      var key = toDateKey(current);
-      var classes = ['clinic-calendar-day'];
-      var ariaLabel = (current.getMonth() + 1) + '月' + current.getDate() + '日';
-      var isCurrentMonth = current.getMonth() === month;
-      var openingPeriods = [];
-      var openingLabel = '';
-
-      if(!isCurrentMonth) {
-        classes.push('is-muted');
-      }else{
-        openingPeriods = getOpeningPeriods(closedDateMap[key]);
-        openingLabel = getOpeningLabel(openingPeriods);
-        classes.push(getOpeningClass(openingPeriods));
-        ariaLabel += openingPeriods.length
-          ? ' 営業時間帯' + openingLabel
-          : ' 休業';
+      function pad(number){
+        return String(number).padStart(2, '0');
       }
-      if(key === todayKey) classes.push('is-today');
 
-      html += '<div class="' + classes.join(' ') + '" aria-label="' + escapeHtml(ariaLabel) + '">';
-      html += '<span>' + current.getDate() + '</span>';
-      if(isCurrentMonth) html += getOpeningMarks(openingPeriods);
-      html += '</div>';
-    }
-
-    html += '</div></article>';
-    return html;
-  }
-
-  function render(data){
-    var closedDateMap = normalizeClosedEntries(data || {});
-    var html = '';
-
-    for(var i = 0; i < MONTH_COUNT; i++){
-      html += buildMonth(monthDate(i), closedDateMap);
-    }
-
-    calendarsEl.innerHTML = html;
-
-    if(statusEl){
-      if(data && data.updatedAt){
-        statusEl.textContent = '最終更新: ' + new Date(data.updatedAt).toLocaleString('ja-JP');
-      }else{
-        statusEl.textContent = '読み込み中';
+      function escapeHtml(value){
+        return String(value).replace(/[&<>'"]/g, function(char){
+          return {'&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;'}[char];
+        });
       }
-    }
-  }
 
-  function renderError(message){
-    calendarsEl.innerHTML = '<p class="clinic-calendar-message">' + escapeHtml(message) + '</p>';
-    if(statusEl) statusEl.textContent = message;
-  }
+      function formatDateKey(date){
+        return date.getFullYear() + '-' + pad(date.getMonth() + 1) + '-' + pad(date.getDate());
+      }
 
-  function loadWithJsonp(){
-    if(!HOLIDAY_CALENDAR_API_URL || HOLIDAY_CALENDAR_API_URL.indexOf('PASTE_GAS_WEB_APP_URL_HERE') !== -1){
-      renderError('開業日カレンダーの接続先が設定されていません。');
-      return;
-    }
+      function formatUpdatedAt(value){
+        if(!value) return '';
+        var date = new Date(value);
+        if(Number.isNaN(date.getTime())) return '';
+        return date.getFullYear() + '/' + pad(date.getMonth() + 1) + '/' + pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' + pad(date.getMinutes());
+      }
 
-    var callbackName = 'clinicHolidayCalendarCallback_' + Date.now();
-    var script = document.createElement('script');
-    var separator = HOLIDAY_CALENDAR_API_URL.indexOf('?') === -1 ? '?' : '&';
-    var timeoutId;
+      function getMonthDate(offset){
+        var today = new Date();
+        return new Date(today.getFullYear(), today.getMonth() + offset, 1);
+      }
 
-    window[callbackName] = function(data){
-      clearTimeout(timeoutId);
-      render(data || {});
-      delete window[callbackName];
-      script.remove();
-    };
+      function normalizeClosedEntries(data){
+        var map = {};
+        if(data && Array.isArray(data.closedEntries)){
+          data.closedEntries.forEach(function(entry){
+            if(entry && entry.date){
+              map[entry.date] = entry.label || '休院日';
+            }
+          });
+          return map;
+        }
+        if(data && Array.isArray(data.closedDates)){
+          data.closedDates.forEach(function(date){
+            map[date] = '休院日';
+          });
+        }
+        return map;
+      }
 
-    timeoutId = setTimeout(function(){
-      renderError('開業日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。');
-      delete window[callbackName];
-      script.remove();
-    }, 8000);
+      function getOpeningPeriods(closedLabel){
+        var allPeriods = [1, 2, 3];
+        if(!closedLabel) return allPeriods;
 
-    script.src = HOLIDAY_CALENDAR_API_URL + separator + 'callback=' + encodeURIComponent(callbackName);
-    script.onerror = function(){
-      clearTimeout(timeoutId);
-      renderError('開業日カレンダーを読み込めませんでした。');
-      delete window[callbackName];
-      script.remove();
-    };
-    document.head.appendChild(script);
-  }
+        var periodMarks = {
+          1: /[①⓵]/,
+          2: /[②⓶]/,
+          3: /[③⓷]/
+        };
+        var hasPartialMark = periodMarks[1].test(closedLabel) || periodMarks[2].test(closedLabel) || periodMarks[3].test(closedLabel);
 
-  calendarsEl.innerHTML = '<p class="clinic-calendar-message">カレンダーを読み込んでいます。</p>';
-  loadWithJsonp();
-})();
+        if(!hasPartialMark) return [];
+
+        return allPeriods.filter(function(period){
+          return !periodMarks[period].test(closedLabel);
+        });
+      }
+
+      function getOpeningClass(periods){
+        if(!periods.length) return 'is-fully-closed';
+        return 'is-open open-' + periods.join('-');
+      }
+
+      function getOpeningLabel(periods, closedLabel){
+        var labels = {1: '⓵', 2: '⓶', 3: '⓷'};
+        if(!periods.length) return closedLabel || '休院日';
+        return periods.map(function(period){ return labels[period]; }).join('');
+      }
+
+      function getOpeningMarks(periods, closedLabel){
+        var labels = {1: '⓵', 2: '⓶', 3: '⓷'};
+        if(!periods.length){
+          return '<span class="clinic-opening-marks"><span class="clinic-opening-mark is-closed-label">' + escapeHtml(closedLabel || '休院日') + '</span></span>';
+        }
+        return '<span class="clinic-opening-marks">' + periods.map(function(period){
+          return '<span class="clinic-opening-mark period-' + period + '">' + labels[period] + '</span>';
+        }).join('') + '</span>';
+      }
+
+      function buildMonth(monthDate, closedDateMap){
+        var year = monthDate.getFullYear();
+        var month = monthDate.getMonth();
+        var firstDay = new Date(year, month, 1);
+        var lastDate = new Date(year, month + 1, 0).getDate();
+        var startWeekday = firstDay.getDay();
+        var todayKey = formatDateKey(new Date());
+        var html = '';
+
+        html += '<article class="clinic-holiday-month">';
+        html += '<h3 class="clinic-holiday-month-title">' + year + '年' + (month + 1) + '月</h3>';
+        html += '<div class="clinic-holiday-weekdays" aria-hidden="true">' + WEEKDAYS.map(function(day){ return '<span>' + day + '</span>'; }).join('') + '</div>';
+        html += '<div class="clinic-holiday-grid">';
+
+        for(var blank = 0; blank < startWeekday; blank++){
+          html += '<span class="clinic-holiday-day is-empty" aria-hidden="true"></span>';
+        }
+
+        for(var date = 1; date <= lastDate; date++){
+          var current = new Date(year, month, date);
+          var key = formatDateKey(current);
+          var closedLabel = closedDateMap[key];
+          var openingPeriods = getOpeningPeriods(closedLabel);
+          var classes = ['clinic-holiday-day', getOpeningClass(openingPeriods)];
+          var openingLabel = getOpeningLabel(openingPeriods, closedLabel);
+          if(key === todayKey) classes.push('is-today');
+          if(current.getDay() === 0) classes.push('is-sunday');
+          if(current.getDay() === 6) classes.push('is-saturday');
+
+          html += '<span class="' + classes.join(' ') + '" aria-label="' + key + ' ' + escapeHtml(openingLabel) + '">';
+          html += '<span class="clinic-holiday-date">' + date + '</span>';
+          html += getOpeningMarks(openingPeriods, closedLabel);
+          html += '</span>';
+        }
+
+        html += '</div></article>';
+        return html;
+      }
+
+      function setActiveToggle(){
+        toggleButtons.forEach(function(button){
+          var isActive = Number(button.getAttribute('data-month-offset')) === currentMonthOffset;
+          button.classList.toggle('is-active', isActive);
+          button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        });
+      }
+
+      function render(data){
+        latestHolidayData = data || latestHolidayData || {};
+        var closedDateMap = normalizeClosedEntries(latestHolidayData);
+        var html = '';
+        for(var i = 0; i < MONTH_COUNT; i++){
+          html += buildMonth(getMonthDate(currentMonthOffset + i), closedDateMap);
+        }
+        calendarsEl.innerHTML = html;
+        setActiveToggle();
+
+        if(statusEl){
+          var updatedAt = formatUpdatedAt(latestHolidayData.updatedAt);
+          statusEl.textContent = updatedAt ? '最終更新: ' + updatedAt : '';
+        }
+      }
+
+      function renderError(){
+        calendarsEl.innerHTML = '<p class="clinic-holiday-error">休院日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
+        if(statusEl){
+          statusEl.textContent = '';
+        }
+      }
+
+      function loadWithJsonp(){
+        var callbackName = 'clinicHolidayCallback_' + Date.now();
+        var script = document.createElement('script');
+        var timeoutId;
+
+        window[callbackName] = function(data){
+          clearTimeout(timeoutId);
+          cleanup();
+          render(data || {});
+        };
+
+        function cleanup(){
+          if(script.parentNode){
+            script.parentNode.removeChild(script);
+          }
+          try { delete window[callbackName]; } catch(error) { window[callbackName] = undefined; }
+        }
+
+        script.src = HOLIDAY_CALENDAR_API_URL + '?callback=' + encodeURIComponent(callbackName) + '&v=' + Date.now();
+        script.onerror = function(){
+          clearTimeout(timeoutId);
+          cleanup();
+          renderError();
+        };
+        timeoutId = setTimeout(function(){
+          cleanup();
+          renderError();
+        }, 10000);
+
+        document.body.appendChild(script);
+      }
+
+      toggleButtons.forEach(function(button){
+        button.addEventListener('click', function(){
+          currentMonthOffset = Number(button.getAttribute('data-month-offset')) || 0;
+          render(latestHolidayData || {});
+        });
+      });
+
+      calendarsEl.innerHTML = '<p class="clinic-holiday-loading">休院日カレンダーを読み込み中です。</p>';
+      setActiveToggle();
+      loadWithJsonp();
+    })();
 
 
 </script>
