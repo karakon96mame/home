@@ -1438,6 +1438,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
   --clinic-period-1:#b9dcff;
   --clinic-period-2:#ffe58a;
   --clinic-period-3:#c8e986;
+  --clinic-period-sunday:#ddd2f2;
   --clinic-closed-bg:#efede9;
 }
 
@@ -1471,6 +1472,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .clinic-opening-swatch.period-1{background:var(--clinic-period-1)}
 .clinic-opening-swatch.period-2{background:var(--clinic-period-2)}
 .clinic-opening-swatch.period-3{background:var(--clinic-period-3)}
+.clinic-opening-swatch.period-sunday{background:var(--clinic-period-sunday)}
 .clinic-opening-swatch.closed{
   background:var(--clinic-closed-bg);
 }
@@ -1592,6 +1594,11 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .clinic-opening-mark.period-1{background:var(--clinic-period-1)}
 .clinic-opening-mark.period-2{background:var(--clinic-period-2)}
 .clinic-opening-mark.period-3{background:var(--clinic-period-3)}
+.clinic-opening-mark.period-sunday{
+  background:var(--clinic-period-sunday);
+  font-size:clamp(9px,1.8vw,12px);
+  white-space:nowrap;
+}
 
 .clinic-opening-mark.is-closed-label{
   background:var(--clinic-closed-bg);
@@ -2020,7 +2027,8 @@ main{padding-top:calc(var(--header-h) + 3px)}
         <span><i class="clinic-opening-swatch period-1" aria-hidden="true"></i>① 10:00～12:00</span>
         <span><i class="clinic-opening-swatch period-2" aria-hidden="true"></i>② 13:30～16:00</span>
         <span><i class="clinic-opening-swatch period-3" aria-hidden="true"></i>③ 17:00～20:30</span>
-        <span><i class="clinic-opening-swatch closed" aria-hidden="true"></i>休業</span>
+        <span><i class="clinic-opening-swatch period-sunday" aria-hidden="true"></i>日曜 10:00～14:00</span>
+        <span><i class="clinic-opening-swatch closed" aria-hidden="true"></i>休院日</span>
       </div>
       <div class="clinic-holiday-controls" aria-label="表示する月を切り替え">
         <button class="clinic-holiday-toggle is-active" type="button" id="clinic-holiday-view-current" data-month-offset="0">今月・来月</button>
@@ -3988,6 +3996,57 @@ function showServiceAndJump(service, targetId){
         }).join('') + '</span>';
       }
 
+      function formatTimeRange(minutes){
+        var hours = Math.floor(minutes / 60);
+        var remainder = minutes % 60;
+        return remainder ? hours + ':' + pad(remainder) : String(hours);
+      }
+
+      function getSundayOpeningRanges(closedLabel){
+        var ranges = [[10 * 60, 14 * 60]];
+        if(!closedLabel) return ranges;
+
+        var closures = [];
+        if(/[①⓵]/.test(closedLabel)) closures.push([10 * 60, 12 * 60]);
+        if(/[②⓶]/.test(closedLabel)) closures.push([13 * 60 + 30, 16 * 60]);
+        if(/[③⓷]/.test(closedLabel)) closures.push([17 * 60, 20 * 60 + 30]);
+        if(!closures.length) return [];
+
+        closures.forEach(function(closure){
+          var nextRanges = [];
+          ranges.forEach(function(range){
+            var closeStart = Math.max(range[0], closure[0]);
+            var closeEnd = Math.min(range[1], closure[1]);
+
+            if(closeStart >= closeEnd){
+              nextRanges.push(range);
+              return;
+            }
+            if(range[0] < closeStart) nextRanges.push([range[0], closeStart]);
+            if(closeEnd < range[1]) nextRanges.push([closeEnd, range[1]]);
+          });
+          ranges = nextRanges;
+        });
+
+        return ranges;
+      }
+
+      function getSundayOpeningLabel(ranges){
+        if(!ranges.length) return '休院日';
+        return ranges.map(function(range){
+          return formatTimeRange(range[0]) + '–' + formatTimeRange(range[1]);
+        }).join('・');
+      }
+
+      function getSundayOpeningMarks(ranges, closedLabel){
+        if(!ranges.length) return getOpeningMarks([], closedLabel);
+        return '<span class="clinic-opening-marks" style="--opening-count:' + ranges.length + '">' +
+          ranges.map(function(range){
+            return '<span class="clinic-opening-mark period-sunday">' +
+              formatTimeRange(range[0]) + '–' + formatTimeRange(range[1]) + '</span>';
+          }).join('') + '</span>';
+      }
+
       function buildMonth(monthDate, closedDateMap){
         var year = monthDate.getFullYear();
         var month = monthDate.getMonth();
@@ -4007,23 +4066,36 @@ function showServiceAndJump(service, targetId){
           var current = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + cell);
           var key = formatDateKey(current);
           var isCurrentMonth = current.getMonth() === month;
+          var isSunday = current.getDay() === 0;
           var closedLabel = isCurrentMonth ? closedDateMap[key] : '';
-          var openingPeriods = isCurrentMonth ? getOpeningPeriods(closedLabel) : [];
-          var openingLabel = isCurrentMonth ? getOpeningLabel(openingPeriods, closedLabel) : '';
+          var openingPeriods = isCurrentMonth && !isSunday ? getOpeningPeriods(closedLabel) : [];
+          var sundayRanges = isCurrentMonth && isSunday ? getSundayOpeningRanges(closedLabel) : [];
+          var openingLabel = '';
           var classes = ['clinic-calendar-day'];
 
           if(isCurrentMonth){
-            classes.push(getOpeningClass(openingPeriods));
+            if(isSunday){
+              openingLabel = getSundayOpeningLabel(sundayRanges);
+              classes.push(sundayRanges.length ? 'is-open' : 'is-fully-closed');
+              classes.push('is-sunday-opening');
+            }else{
+              openingLabel = getOpeningLabel(openingPeriods, closedLabel);
+              classes.push(getOpeningClass(openingPeriods));
+            }
           }else{
             classes.push('is-muted');
           }
           if(key === todayKey) classes.push('is-today');
-          if(current.getDay() === 0) classes.push('is-sunday');
+          if(isSunday) classes.push('is-sunday');
           if(current.getDay() === 6) classes.push('is-saturday');
 
           html += '<div class="' + classes.join(' ') + '" aria-label="' + key + (openingLabel ? ' ' + escapeHtml(openingLabel) : '') + '">';
           html += '<span class="clinic-holiday-date">' + current.getDate() + '</span>';
-          if(isCurrentMonth) html += getOpeningMarks(openingPeriods, closedLabel);
+          if(isCurrentMonth){
+            html += isSunday
+              ? getSundayOpeningMarks(sundayRanges, closedLabel)
+              : getOpeningMarks(openingPeriods, closedLabel);
+          }
           html += '</div>';
         }
 
