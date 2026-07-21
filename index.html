@@ -3981,9 +3981,9 @@ function showServiceAndJump(service, targetId){
       function getOpeningMarks(periods, closedLabel){
         var labels = {1: '⓵', 2: '⓶', 3: '⓷'};
         if(!periods.length){
-          return '<span class="clinic-opening-marks"><span class="clinic-opening-mark is-closed-label">' + escapeHtml(closedLabel || '休院日') + '</span></span>';
+          return '<span class="clinic-opening-marks" style="--opening-count:1"><span class="clinic-opening-mark is-closed-label">' + escapeHtml(closedLabel || '休院日') + '</span></span>';
         }
-        return '<span class="clinic-opening-marks">' + periods.map(function(period){
+        return '<span class="clinic-opening-marks" style="--opening-count:' + periods.length + '">' + periods.map(function(period){
           return '<span class="clinic-opening-mark period-' + period + '">' + labels[period] + '</span>';
         }).join('') + '</span>';
       }
@@ -3992,35 +3992,39 @@ function showServiceAndJump(service, targetId){
         var year = monthDate.getFullYear();
         var month = monthDate.getMonth();
         var firstDay = new Date(year, month, 1);
-        var lastDate = new Date(year, month + 1, 0).getDate();
-        var startWeekday = firstDay.getDay();
+        var gridStart = new Date(year, month, 1 - firstDay.getDay());
         var todayKey = formatDateKey(new Date());
         var html = '';
 
-        html += '<article class="clinic-holiday-month">';
-        html += '<h3 class="clinic-holiday-month-title">' + year + '年' + (month + 1) + '月</h3>';
-        html += '<div class="clinic-holiday-weekdays" aria-hidden="true">' + WEEKDAYS.map(function(day){ return '<span>' + day + '</span>'; }).join('') + '</div>';
-        html += '<div class="clinic-holiday-grid">';
+        html += '<article class="clinic-calendar">';
+        html += '<h3 class="clinic-calendar-month">' + year + '年' + (month + 1) + '月</h3>';
+        html += '<div class="clinic-calendar-grid">';
+        WEEKDAYS.forEach(function(day){
+          html += '<div class="clinic-calendar-weekday" aria-hidden="true">' + day + '</div>';
+        });
 
-        for(var blank = 0; blank < startWeekday; blank++){
-          html += '<span class="clinic-holiday-day is-empty" aria-hidden="true"></span>';
-        }
-
-        for(var date = 1; date <= lastDate; date++){
-          var current = new Date(year, month, date);
+        for(var cell = 0; cell < 42; cell++){
+          var current = new Date(gridStart.getFullYear(), gridStart.getMonth(), gridStart.getDate() + cell);
           var key = formatDateKey(current);
-          var closedLabel = closedDateMap[key];
-          var openingPeriods = getOpeningPeriods(closedLabel);
-          var classes = ['clinic-holiday-day', getOpeningClass(openingPeriods)];
-          var openingLabel = getOpeningLabel(openingPeriods, closedLabel);
+          var isCurrentMonth = current.getMonth() === month;
+          var closedLabel = isCurrentMonth ? closedDateMap[key] : '';
+          var openingPeriods = isCurrentMonth ? getOpeningPeriods(closedLabel) : [];
+          var openingLabel = isCurrentMonth ? getOpeningLabel(openingPeriods, closedLabel) : '';
+          var classes = ['clinic-calendar-day'];
+
+          if(isCurrentMonth){
+            classes.push(getOpeningClass(openingPeriods));
+          }else{
+            classes.push('is-muted');
+          }
           if(key === todayKey) classes.push('is-today');
           if(current.getDay() === 0) classes.push('is-sunday');
           if(current.getDay() === 6) classes.push('is-saturday');
 
-          html += '<span class="' + classes.join(' ') + '" aria-label="' + key + ' ' + escapeHtml(openingLabel) + '">';
-          html += '<span class="clinic-holiday-date">' + date + '</span>';
-          html += getOpeningMarks(openingPeriods, closedLabel);
-          html += '</span>';
+          html += '<div class="' + classes.join(' ') + '" aria-label="' + key + (openingLabel ? ' ' + escapeHtml(openingLabel) : '') + '">';
+          html += '<span class="clinic-holiday-date">' + current.getDate() + '</span>';
+          if(isCurrentMonth) html += getOpeningMarks(openingPeriods, closedLabel);
+          html += '</div>';
         }
 
         html += '</div></article>';
@@ -4052,7 +4056,7 @@ function showServiceAndJump(service, targetId){
       }
 
       function renderError(){
-        calendarsEl.innerHTML = '<p class="clinic-holiday-error">休院日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
+        calendarsEl.innerHTML = '<p class="clinic-calendar-message">開業日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
         if(statusEl){
           statusEl.textContent = '';
         }
@@ -4097,7 +4101,7 @@ function showServiceAndJump(service, targetId){
         });
       });
 
-      calendarsEl.innerHTML = '<p class="clinic-holiday-loading">休院日カレンダーを読み込み中です。</p>';
+      calendarsEl.innerHTML = '<p class="clinic-calendar-message">開業日カレンダーを読み込み中です。</p>';
       setActiveToggle();
       loadWithJsonp();
     })();
