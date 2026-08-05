@@ -430,6 +430,32 @@ main{padding-top:calc(var(--header-h) + 3px)}
 .form-sub{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:var(--space-6);text-align:center}
 .form-cta-wrap{display:flex;justify-content:center;margin-bottom:var(--space-5)}
 .form-cta{display:inline-flex;width:min(100%,360px)}
+.google-account-notice{
+  display:flex;
+  align-items:flex-start;
+  gap:var(--space-2);
+  max-width:720px;
+  margin:var(--space-4) auto 0;
+  padding:var(--space-3) var(--space-4);
+  border:1px solid var(--color-accent);
+  border-radius:var(--radius-md);
+  background:var(--color-accent-light);
+  color:var(--color-text);
+  font-size:var(--text-xs);
+  line-height:1.65;
+}
+.google-account-notice::before{
+  content:"⚠";
+  flex:0 0 auto;
+  color:var(--color-accent);
+  font-size:1.1em;
+  line-height:1.65;
+}
+.google-account-notice strong{color:var(--color-text)}
+.google-account-notice[hidden]{display:none}
+.clinic-access-info .google-account-notice{
+  margin-inline:0;
+}
 @media(min-width:900px){
   .form-title{white-space:nowrap}
 }
@@ -2031,6 +2057,9 @@ main{padding-top:calc(var(--header-h) + 3px)}
        rel="noopener noreferrer">
       台町店の予約フォームへ
     </a>
+    <p class="google-account-notice" role="note">
+      <span><strong>フォームが読み込めない場合：</strong>複数のGoogleアカウントにログインしていると、正しく表示されないことがあります。ブラウザのプライベートモードで開くか、ほかのGoogleアカウントからログアウトして、もう一度お試しください。</span>
+    </p>
   </div>
 
   <div class="clinic-access-map">
@@ -2079,6 +2108,9 @@ main{padding-top:calc(var(--header-h) + 3px)}
         <button class="clinic-holiday-toggle is-active" type="button" id="clinic-holiday-view-current" data-month-offset="0">今月・来月</button>
         <button class="clinic-holiday-toggle" type="button" id="clinic-holiday-view-next" data-month-offset="1">来月・再来月</button>
       </div>
+      <p class="google-account-notice" id="clinic-calendar-account-notice" role="alert" hidden>
+        <span><strong>カレンダーが読み込めない場合：</strong>複数のGoogleアカウントにログインしていると、正しく表示されないことがあります。ブラウザのプライベートモードで開くか、ほかのGoogleアカウントからログアウトして、もう一度お試しください。</span>
+      </p>
       <div class="clinic-holiday-calendars" id="clinic-holiday-calendars" aria-live="polite"></div>
       <p class="clinic-holiday-status" id="clinic-holiday-status">カレンダーを読み込んでいます。</p>
     </div>
@@ -3297,6 +3329,9 @@ document.addEventListener("DOMContentLoaded", function(){
       <div class="form-cta-wrap">
         <a href="https://docs.google.com/forms/d/1P2sGhHzhSzyuHeg6Hm-9lks-1A-Uqm4dzvxwAFddUiI/viewform" class="btn btn-primary form-cta" target="_blank" rel="noopener noreferrer">申し込みフォームを開く</a>
       </div>
+      <p class="google-account-notice" role="note">
+        <span><strong>フォームが読み込めない場合：</strong>複数のGoogleアカウントにログインしていると、正しく表示されないことがあります。ブラウザのプライベートモードで開くか、ほかのGoogleアカウントからログアウトして、もう一度お試しください。</span>
+      </p>
            <p class="form-note">※ ご入力いただいた情報は個人情報保護法に則り運用し、<br>施術のご案内や各種ご相談の手配のみに使用します。</p>
     </div>
   </div>
@@ -3952,6 +3987,7 @@ function showServiceAndJump(service, targetId){
       var WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
       var calendarsEl = document.getElementById('clinic-holiday-calendars');
       var statusEl = document.getElementById('clinic-holiday-status');
+      var accountNoticeEl = document.getElementById('clinic-calendar-account-notice');
       var toggleButtons = Array.prototype.slice.call(document.querySelectorAll('.clinic-holiday-toggle[data-month-offset]'));
       var currentMonthOffset = 0;
       var latestHolidayData = null;
@@ -4165,6 +4201,9 @@ function showServiceAndJump(service, targetId){
         }
         calendarsEl.innerHTML = html;
         setActiveToggle();
+        if(accountNoticeEl){
+          accountNoticeEl.hidden = true;
+        }
 
         if(statusEl){
           var updatedAt = formatUpdatedAt(latestHolidayData.updatedAt);
@@ -4174,6 +4213,9 @@ function showServiceAndJump(service, targetId){
 
       function renderError(){
         calendarsEl.innerHTML = '<p class="clinic-calendar-message">開業日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
+        if(accountNoticeEl){
+          accountNoticeEl.hidden = false;
+        }
         if(statusEl){
           statusEl.textContent = '';
         }
