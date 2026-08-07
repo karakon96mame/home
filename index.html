@@ -1805,6 +1805,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
             <a href="#" onclick="showServiceAndJump('clinic','clinic-introduction'); return false;">台町店について</a>
             <a href="#" onclick="showServiceAndJump('clinic','clinic-plan'); return false;">施術プラン・料金</a>
             <a href="#" onclick="showServiceAndJump('clinic','clinic-access'); return false;">台町店へのアクセス</a>
+            <a href="#" onclick="showServiceAndJump('clinic','clinic-holidays'); return false;">開院日カレンダー</a>
             <a href="#" onclick="showServiceAndJump('clinic','shop'); return false;">健康グッズショップ</a>
             <a href="#" onclick="showServiceAndJump('clinic','staff'); return false;">施術者紹介</a>
           </div>
@@ -1857,6 +1858,7 @@ main{padding-top:calc(var(--header-h) + 3px)}
     <a href="#" class="mobile-nav-link" onclick="showServiceAndJump('clinic','clinic-introduction'); return false;">🏠 台町店について</a>
     <a href="#" class="mobile-nav-link mobile-nav-sub" onclick="showServiceAndJump('clinic','clinic-plan'); return false;">💆 施術プラン・料金</a>
     <a href="#" class="mobile-nav-link mobile-nav-sub" onclick="showServiceAndJump('clinic','clinic-access'); return false;">📍 台町店へのアクセス</a>
+    <a href="#" class="mobile-nav-link mobile-nav-sub" onclick="showServiceAndJump('clinic','clinic-holidays'); return false;">📅 開院日カレンダー</a>
     <a href="#" class="mobile-nav-link mobile-nav-sub" onclick="showServiceAndJump('clinic','shop'); return false;">🛒 健康グッズショップ</a>
     <a href="#" class="mobile-nav-link mobile-nav-sub" onclick="showServiceAndJump('clinic','staff'); return false;">👤 施術者紹介</a>
   </div>
@@ -2087,14 +2089,14 @@ main{padding-top:calc(var(--header-h) + 3px)}
 <!-- ⑦ SHOP -->
 
 
-<!-- 開業日カレンダー -->
+<!-- 開院日カレンダー -->
 <section class="section clinic-holiday-section" id="clinic-holidays">
   <div class="container">
     <div class="clinic-holiday-panel">
       <div class="clinic-holiday-head">
         <div>
           <p class="section-label">CALENDAR</p>
-          <h2 class="clinic-holiday-title">開業日カレンダー</h2>
+          <h2 class="clinic-holiday-title">開院日カレンダー</h2>
         </div>
       </div>
       <div class="clinic-opening-periods" aria-label="営業時間帯と色の説明">
@@ -3980,7 +3982,7 @@ function showServiceAndJump(service, targetId){
 
 
 
-// === 開業日カレンダー（Googleカレンダーの休診時間 + GAS連携） ===
+// === 開院日カレンダー（Googleカレンダーの休診時間 + GAS連携） ===
 (function(){
       var HOLIDAY_CALENDAR_API_URL = 'https://script.google.com/macros/s/AKfycbyixQbKqyesnAQWkulsHb00I-0U2tOXZ0tsETKgQQgvF3sZmbNuWA21qO_mCNrWN4ka/exec';
       var MONTH_COUNT = 2;
@@ -4212,7 +4214,7 @@ function showServiceAndJump(service, targetId){
       }
 
       function renderError(){
-        calendarsEl.innerHTML = '<p class="clinic-calendar-message">開業日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
+        calendarsEl.innerHTML = '<p class="clinic-calendar-message">開院日カレンダーを読み込めませんでした。時間をおいて再度ご確認ください。</p>';
         if(accountNoticeEl){
           accountNoticeEl.hidden = false;
         }
@@ -4260,7 +4262,7 @@ function showServiceAndJump(service, targetId){
         });
       });
 
-      calendarsEl.innerHTML = '<p class="clinic-calendar-message">開業日カレンダーを読み込み中です。</p>';
+      calendarsEl.innerHTML = '<p class="clinic-calendar-message">開院日カレンダーを読み込み中です。</p>';
       setActiveToggle();
       loadWithJsonp();
     })();
