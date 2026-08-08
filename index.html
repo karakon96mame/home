@@ -1188,6 +1188,10 @@ main{padding-top:calc(var(--header-h) + 3px)}
   display:none;
 }
 
+#clinic-actions{
+  display:flex;
+}
+
 .clinic-info-list{
   list-style:none;
   padding:0;
@@ -1918,6 +1922,9 @@ main{padding-top:calc(var(--header-h) + 3px)}
         <h1>からだのコンビニ<br>くろまめはりきゅう院<br>はり・きゅう・マッサージの治療院<br>予約優先</h1>
         <!-- 修正箇所: サブキャッチコピー -->
         <p class="hero-sub">お店でケアと運動とリフレッシュ<br>訪問はケガや病気の後遺症で歩くのが大変な方<br>はり・きゅう・あん摩マッサージ指圧の国家資格免許は安心の証<br>お子様からご高齢の方まで、地域と共に支える安心のケア。</p>
+        <div class="hero-actions" id="clinic-actions">
+          <a href="https://script.google.com/macros/s/AKfycbzxj8ITX23qJl1l47Oz4WEmYuvHqCZ6e7rmhiN1S73aSaMsIkGbous3P3MDijdkSaQI/exec" class="btn btn-primary" target="_blank" rel="noopener noreferrer">台町店の予約フォームへ</a>
+        </div>
         <div class="hero-actions" id="visit-actions">
           <a href="https://docs.google.com/forms/d/1P2sGhHzhSzyuHeg6Hm-9lks-1A-Uqm4dzvxwAFddUiI/viewform" class="btn btn-primary" target="_blank" rel="noopener noreferrer">無料体験を申し込む</a>
           <a href="#faq" class="btn btn-outline">料金・よくある質問</a>
@@ -3945,7 +3952,12 @@ function showService(type){
     behavior: "smooth"
   });
 
+  const clinicActions = document.getElementById('clinic-actions');
   const visitActions = document.getElementById('visit-actions');
+
+  if(clinicActions){
+    clinicActions.style.display = type === 'clinic' ? 'flex' : 'none';
+  }
 
   if(type === 'visit'){
     visitActions.style.display = 'flex';
